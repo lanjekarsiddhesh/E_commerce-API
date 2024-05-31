@@ -4,21 +4,22 @@ import uuid
 # Create your models here.
 class Category(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100,unique=True)
 
     def __str__(self) -> str:
         return self.name
 
 class subCategory(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=100)
+    Category_id = models.ForeignKey(Category,on_delete=models.CASCADE,default="0d5b4d40-dd0c-477a-ae3b-873ba9ae7331")
+    name = models.CharField(max_length=100,unique=True)
 
     def __str__(self) -> str:
         return self.name
 
 class Company(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100,unique=True)
 
     def __str__(self) -> str:
         return self.name
