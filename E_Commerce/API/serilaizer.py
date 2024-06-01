@@ -40,6 +40,22 @@ class ProductSerializer(serializers.ModelSerializer):
     Category = serializers.StringRelatedField()
     subCategory = SubCategorySerializer()
 
+class CartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cart
+        fields = '__all__'
+        extra_kwargs = {
+            id : {'read_only':True},
+            'user' : {'read_only':True}
+        }
+
+class CartItem(serializers.ModelSerializer):
+    class Meta:
+        model = CartItem
+        fields = '__all__'
+    cart = CartSerializer()
+    product = serializers.StringRelatedField()
+
 
 # User serializer
 
