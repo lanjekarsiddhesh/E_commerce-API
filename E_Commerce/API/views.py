@@ -18,6 +18,9 @@ from .filters import *
 
 
 # Create your views here.
+def LoginUser(request):
+    print(request.Myuser)
+
 class CategoryAPI(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
@@ -33,12 +36,34 @@ class CompanyAPI(ModelViewSet):
 class ProductAPI(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [CustomPermission]
+    # permission_classes = [CustomPermission]
     filter_backends = [DjangoFilterBackend,SearchFilter,OrderingFilter]
     filterset_class = productFilters
     search_fields = ['name','description']
     ordering_fields = ['price']
+
+    
+class FilterProductByCategory(ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+    filter_backends = [DjangoFilterBackend,SearchFilter,OrderingFilter]
+    filterset_class = productFilters
+    search_fields = ['name','description']
+    ordering_fields = ['price']
+
+    def get_queryset(self):
+        return Product.objects.filter(Category_id=self.kwargs["Category_pk"])
   
+class ReviewAPI(ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+    def get_queryset(self):
+        return Review.objects.filter(product_id=self.kwargs['product_pk'])
+
+    def get_serializer_context(self):
+        return {"product_id":self.kwargs['product_pk']}
 
 
 # UserView

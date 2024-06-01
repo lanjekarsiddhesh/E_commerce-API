@@ -16,6 +16,18 @@ class Company(admin.ModelAdmin):
 class Subcategory(admin.ModelAdmin):
     list_display = ['id','name','Category_id']
 
+@admin.register(Review)
+class Reviews(admin.ModelAdmin):
+    list_display = ['id','review','rating','Created_at']
+
+@admin.register(Cart)
+class Carts(admin.ModelAdmin):
+    list_display = ['id', 'user', 'created_at']
+
+@admin.register(CartItem)
+class CartItems(admin.ModelAdmin):
+    list_display = ['id','cart','product','quantity','Totalprice']
+
 
 class ImageAdmin(admin.ModelAdmin):
 

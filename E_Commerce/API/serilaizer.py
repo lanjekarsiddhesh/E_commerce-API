@@ -2,10 +2,11 @@ from rest_framework import serializers
 from productApp.models import *
 from userApp.models import *
 
-class ProductSerializer(serializers.ModelSerializer):
+class CompanySerializer(serializers.ModelSerializer):
+    # product = ProductSerializer(many=True,read_only=True)
     class Meta:
-        model = Product
-        fields = '__all__'
+        model = Company
+        fields = ['id','name']
         extra_kwargs = {
             id : {'read_only':True}
         }
@@ -13,28 +14,32 @@ class ProductSerializer(serializers.ModelSerializer):
 class SubCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = subCategory
-        fields = ['id','name','Category_id']
+        fields = ['name','Category_id']
         extra_kwargs = {
             id : {'read_only':True}
         }
+    Category_id = serializers.StringRelatedField()
 
 class CategorySerializer(serializers.ModelSerializer):
-    SubCategory = SubCategorySerializer(many=True,read_only=True)
     class Meta:
         model = Category
-        fields = ['id','name','SubCategory']
+        fields = ['id','name']
         extra_kwargs = {
             id : {'read_only':True}
         }
 
-class CompanySerializer(serializers.ModelSerializer):
-    product = ProductSerializer(many=True,read_only=True)
+
+class ProductSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Company
-        fields = ['id','name','product']
+        model = Product
+        fields = '__all__'
         extra_kwargs = {
             id : {'read_only':True}
         }
+    company = CompanySerializer()
+    Category = serializers.StringRelatedField()
+    subCategory = SubCategorySerializer()
+
 
 # User serializer
 
@@ -63,3 +68,13 @@ class LoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = Myuser
         fields = ['email','password']
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ['id','rating','review','user','Created_at']
+    # user = ProductSerializer()
+    def create(self, validated_data):
+        product_id = self.context['product_id']
+        return Review.objects.create(product_id=product_id, **validated_data)
